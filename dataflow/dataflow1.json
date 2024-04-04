@@ -1,0 +1,219 @@
+{
+	"name": "dataflow1",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "AzureSqlTable8",
+						"type": "DatasetReference"
+					},
+					"name": "product"
+				},
+				{
+					"dataset": {
+						"referenceName": "AzureSqlTable9",
+						"type": "DatasetReference"
+					},
+					"name": "source2"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "AzureSqlTable10",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "joiningusingproductcatogeryId"
+				},
+				{
+					"name": "yearfromstartselldate"
+				},
+				{
+					"name": "split1"
+				},
+				{
+					"name": "sortingbasedonlistprice"
+				},
+				{
+					"name": "rankingbasedonstandardcost"
+				},
+				{
+					"name": "select1"
+				},
+				{
+					"name": "lookup1"
+				},
+				{
+					"name": "filter1"
+				},
+				{
+					"name": "aggregatesamecolorproduct"
+				},
+				{
+					"name": "surrogateKey1"
+				},
+				{
+					"name": "select2"
+				},
+				{
+					"name": "pivot1"
+				},
+				{
+					"name": "unpivot1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          ProductID as integer,",
+				"          Name as string,",
+				"          ProductNumber as string,",
+				"          Color as string,",
+				"          StandardCost as decimal(19,4),",
+				"          ListPrice as decimal(19,4),",
+				"          Size as string,",
+				"          Weight as decimal(8,2),",
+				"          ProductCategoryID as integer,",
+				"          ProductModelID as integer,",
+				"          SellStartDate as timestamp,",
+				"          SellEndDate as timestamp,",
+				"          DiscontinuedDate as timestamp,",
+				"          ThumbNailPhoto as binary,",
+				"          ThumbnailPhotoFileName as string,",
+				"          rowguid as string,",
+				"          ModifiedDate as timestamp",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> product",
+				"source(output(",
+				"          ProductCategoryID as integer,",
+				"          ParentProductCategoryID as integer,",
+				"          Name as string,",
+				"          rowguid as string,",
+				"          ModifiedDate as timestamp",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> source2",
+				"product, source2 join(product@ProductCategoryID == source2@ProductCategoryID,",
+				"     joinType:'inner',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> joiningusingproductcatogeryId",
+				"joiningusingproductcatogeryId derive(SellStartDate = year(SellStartDate)) ~> yearfromstartselldate",
+				"yearfromstartselldate split(SellStartDate<2006,",
+				"     disjoint: false) ~> split1@(sellstartlessthan2006, sellstartgratherthan2006)",
+				"split1@sellstartlessthan2006 sort(desc(ListPrice, true)) ~> sortingbasedonlistprice",
+				"select1 rank(desc(StandardCost, true),",
+				"     output(Rank as long)) ~> rankingbasedonstandardcost",
+				"sortingbasedonlistprice select(mapColumn(",
+				"          ProductID,",
+				"          Name = split1@sellstartlessthan2006@Name,",
+				"          ProductNumber,",
+				"          Color,",
+				"          StandardCost,",
+				"          ListPrice,",
+				"          Size,",
+				"          Weight,",
+				"          ProductCategoryID = split1@sellstartlessthan2006@ProductCategoryID,",
+				"          ProductModelID,",
+				"          SellStartDate,",
+				"          SellEndDate,",
+				"          DiscontinuedDate,",
+				"          ThumbNailPhoto,",
+				"          ThumbnailPhotoFileName,",
+				"          rowguid = split1@sellstartlessthan2006@rowguid,",
+				"          ModifiedDate = split1@sellstartlessthan2006@ModifiedDate,",
+				"          ProductCategoryID = split1@sellstartlessthan2006@ProductCategoryID,",
+				"          ParentProductCategoryID,",
+				"          Name = split1@sellstartlessthan2006@Name,",
+				"          rowguid = split1@sellstartlessthan2006@rowguid,",
+				"          ModifiedDate = split1@sellstartlessthan2006@ModifiedDate",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"rankingbasedonstandardcost, product lookup(select1@ProductID == product@ProductID,",
+				"     multiple: false,",
+				"     pickup: 'any',",
+				"     broadcast: 'auto')~> lookup1",
+				"lookup1 filter(isNull(select1@Size)) ~> filter1",
+				"surrogateKey1 aggregate(groupBy(Color),",
+				"     Countofcolor = count()) ~> aggregatesamecolorproduct",
+				"select2 keyGenerate(output(ProductIdkey as long),",
+				"     startAt: 1L,",
+				"     stepValue: 1L) ~> surrogateKey1",
+				"filter1 select(mapColumn(",
+				"          ProductID = select1@ProductID,",
+				"          Name = select1@Name,",
+				"          ProductNumber = select1@ProductNumber,",
+				"          Color = select1@Color,",
+				"          StandardCost = select1@StandardCost,",
+				"          ListPrice = select1@ListPrice,",
+				"          Size = select1@Size,",
+				"          Weight = select1@Weight,",
+				"          ProductCategoryID = select1@ProductCategoryID,",
+				"          ProductModelID = select1@ProductModelID,",
+				"          SellStartDate = select1@SellStartDate,",
+				"          SellEndDate = select1@SellEndDate,",
+				"          DiscontinuedDate = select1@DiscontinuedDate,",
+				"          ThumbNailPhoto = select1@ThumbNailPhoto,",
+				"          ThumbnailPhotoFileName = select1@ThumbnailPhotoFileName,",
+				"          rowguid = select1@rowguid,",
+				"          ModifiedDate = select1@ModifiedDate,",
+				"          ParentProductCategoryID,",
+				"          Rank,",
+				"          ProductID = product@ProductID,",
+				"          Name = product@Name,",
+				"          ProductNumber = product@ProductNumber,",
+				"          Color = product@Color,",
+				"          StandardCost = product@StandardCost,",
+				"          ListPrice = product@ListPrice,",
+				"          Size = product@Size,",
+				"          Weight = product@Weight,",
+				"          ProductCategoryID = product@ProductCategoryID,",
+				"          ProductModelID = product@ProductModelID,",
+				"          SellStartDate = product@SellStartDate,",
+				"          SellEndDate = product@SellEndDate,",
+				"          DiscontinuedDate = product@DiscontinuedDate,",
+				"          ThumbNailPhoto = product@ThumbNailPhoto,",
+				"          ThumbnailPhotoFileName = product@ThumbnailPhotoFileName,",
+				"          rowguid = product@rowguid,",
+				"          ModifiedDate = product@ModifiedDate",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select2",
+				"surrogateKey1 pivot(groupBy(ProductCategoryID),",
+				"     pivotBy(ProductCategoryID),",
+				"     {} = count(ProductCategoryID),",
+				"     columnNaming: '$N$V',",
+				"     lateral: true) ~> pivot1",
+				"pivot1 unpivot(output(",
+				"          Countofcatogery as long,",
+				"          {} as long",
+				"     ),",
+				"     ungroupBy(ProductCategoryID),",
+				"     lateral: true,",
+				"     ignoreNullPivots: false) ~> unpivot1",
+				"filter1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+			]
+		}
+	}
+}

@@ -1,0 +1,17 @@
+{
+	"name": "AzureSqlTable10",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabase2",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "BALAJI",
+			"table": "Productedited"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
