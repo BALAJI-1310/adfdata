@@ -1,0 +1,27 @@
+{
+	"name": "COPYINGTABES",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabase2",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"SINKTABLENAME": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": {
+				"value": "@split(dataset().SINKTABLENAME,'.')[0]",
+				"type": "Expression"
+			},
+			"table": {
+				"value": "@split(dataset().SINKTABLENAME,'.')[1]",
+				"type": "Expression"
+			}
+		}
+	}
+}
