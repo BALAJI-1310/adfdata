@@ -29,6 +29,12 @@
 		"SqlServer1_connectionString": {
 			"value": ""
 		},
+		"task3db_connectionString": {
+			"value": ""
+		},
+		"RestService1_properties_typeProperties_url": {
+			"value": "https://dummyapi.online/api/movies"
+		},
 		"containerUri": {
 			"value": ""
 		},

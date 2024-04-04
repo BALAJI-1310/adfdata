@@ -39,6 +39,14 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'SqlServer1'"
 		},
+		"task3db_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'task3db'"
+		},
+		"RestService1_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://dummyapi.online/api/movies"
+		},
 		"containerUri": {
 			"type": "string",
 			"metadata": "URI to storage account containing linked ARM templates"
@@ -74,12 +82,6 @@
 					},
 					"SqlServer1_connectionString": {
 						"value": "[parameters('SqlServer1_connectionString')]"
-					},
-					"AzureBlobStorage1_connectionString": {
-						"value": "[parameters('AzureBlobStorage1_connectionString')]"
-					},
-					"AzureBlobStoragefortrain_connectionString": {
-						"value": "[parameters('AzureBlobStoragefortrain_connectionString')]"
 					}
 				}
 			},
@@ -99,6 +101,12 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
+					"AzureBlobStorage1_connectionString": {
+						"value": "[parameters('AzureBlobStorage1_connectionString')]"
+					},
+					"AzureBlobStoragefortrain_connectionString": {
+						"value": "[parameters('AzureBlobStoragefortrain_connectionString')]"
+					},
 					"AzureBlobStorageusingair_connectionString": {
 						"value": "[parameters('AzureBlobStorageusingair_connectionString')]"
 					},
@@ -107,6 +115,12 @@
 					},
 					"AzureSqlDatabase2_connectionString": {
 						"value": "[parameters('AzureSqlDatabase2_connectionString')]"
+					},
+					"task3db_connectionString": {
+						"value": "[parameters('task3db_connectionString')]"
+					},
+					"RestService1_properties_typeProperties_url": {
+						"value": "[parameters('RestService1_properties_typeProperties_url')]"
 					}
 				}
 			},
@@ -132,6 +146,26 @@
 			},
 			"dependsOn": [
 				"[resourceId('Microsoft.Resources/deployments', 'BalajiADFTest1310_ArmTemplate_1')]"
+			]
+		},
+		{
+			"name": "BalajiADFTest1310_ArmTemplate_3",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_3.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'BalajiADFTest1310_ArmTemplate_2')]"
 			]
 		}
 	]
