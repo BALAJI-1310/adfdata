@@ -1149,7 +1149,7 @@
 													},
 													{
 														"name": "PipelineTime",
-														"type": "String",
+														"type": "Datetime",
 														"value": {
 															"value": "@pipeline().TriggerTime",
 															"type": "Expression"
@@ -1182,7 +1182,7 @@
 													},
 													{
 														"name": "PipelineTime",
-														"type": "String",
+														"type": "Datetime",
 														"value": {
 															"value": "@pipeline().TriggerTime",
 															"type": "Expression"
@@ -1234,7 +1234,7 @@
 													},
 													{
 														"name": "PipelineTime",
-														"type": "String",
+														"type": "Datetime",
 														"value": {
 															"value": "@pipeline().TriggerTime",
 															"type": "Expression"
