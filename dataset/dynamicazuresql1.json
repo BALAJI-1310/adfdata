@@ -1,12 +1,15 @@
 {
-	"name": "AzureSqlTable11",
+	"name": "dynamicazuresql1",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "Azuresqlselfhosted1",
+			"referenceName": "AzureSqlDatabase2",
 			"type": "LinkedServiceReference"
 		},
 		"parameters": {
-			"sinktablename": {
+			"Schema_name": {
+				"type": "string"
+			},
+			"Table_name": {
 				"type": "string"
 			}
 		},
@@ -14,12 +17,14 @@
 		"type": "AzureSqlTable",
 		"schema": [],
 		"typeProperties": {
-			"schema": "Balaji",
+			"schema": {
+				"value": "@dataset().Schema_name",
+				"type": "Expression"
+			},
 			"table": {
-				"value": "@split(dataset().sinktablename,'.' )[1]",
+				"value": "@dataset().Table_name",
 				"type": "Expression"
 			}
 		}
-	},
-	"type": "Microsoft.DataFactory/factories/datasets"
+	}
 }
