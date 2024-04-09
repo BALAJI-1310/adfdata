@@ -772,7 +772,7 @@
 									"userProperties": [],
 									"typeProperties": {
 										"expression": {
-											"value": "@equals(item().TABLE_NAME,'dbo.dimCustomer')",
+											"value": "@equals(item().TABLE_NAME,'dbo.DimCustomer')",
 											"type": "Expression"
 										},
 										"ifFalseActivities": [
