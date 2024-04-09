@@ -106,7 +106,8 @@
 												"value": {
 													"value": "@pipeline().Pipeline",
 													"type": "Expression"
-												}
+												},
+												"direction": "Input"
 											},
 											{
 												"name": "PipelineTime",
@@ -114,7 +115,8 @@
 												"value": {
 													"value": "@pipeline().TriggerTime",
 													"type": "Expression"
-												}
+												},
+												"direction": "Input"
 											}
 										],
 										"type": "NonQuery",
@@ -128,7 +130,8 @@
 												"value": {
 													"value": "@pipeline().Pipeline",
 													"type": "Expression"
-												}
+												},
+												"direction": "Input"
 											},
 											{
 												"name": "PipelineError",
@@ -136,7 +139,8 @@
 												"value": {
 													"value": "@activity('Copy data1').output.errors[0].message",
 													"type": "Expression"
-												}
+												},
+												"direction": "Input"
 											},
 											{
 												"name": "PipelineTime",
@@ -144,7 +148,8 @@
 												"value": {
 													"value": "@pipeline().TriggerTime",
 													"type": "Expression"
-												}
+												},
+												"direction": "Input"
 											}
 										],
 										"type": "NonQuery",
@@ -186,7 +191,8 @@
 												"value": {
 													"value": "@pipeline().Pipeline",
 													"type": "Expression"
-												}
+												},
+												"direction": "Input"
 											},
 											{
 												"name": "PipelineTime",
@@ -194,7 +200,8 @@
 												"value": {
 													"value": "@pipeline().TriggerTime",
 													"type": "Expression"
-												}
+												},
+												"direction": "Input"
 											}
 										],
 										"type": "NonQuery",
